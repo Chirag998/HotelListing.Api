@@ -38,3 +38,17 @@ Content-Type: application/json
 GET {{HotelListing.Api_HostAddress}}/api/hotels/{{id}}
 
 ###
+
+GET {{HotelListing.Api_HostAddress}}/api/countries
+
+###
+
+POST {{HotelListing.Api_HostAddress}}/api/countries
+Content-Type: application/json
+
+{
+  "name":"India",
+  "shortName":"IND"
+}
+
+###
