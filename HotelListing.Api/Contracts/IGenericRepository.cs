@@ -10,6 +10,6 @@ namespace HotelListing.Api.Contracts
         Task<T> AddAsync(T entity);
         Task DeleteAsync(int id);
         Task UpdateAsync(T entity);
-        Task<bool> Exist(int id);
+        Task<bool> ExistAsync(int id);
     }
 }

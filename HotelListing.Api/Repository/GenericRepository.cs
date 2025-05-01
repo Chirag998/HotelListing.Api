@@ -35,7 +35,7 @@ namespace HotelListing.Api.Repository
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<bool> Exist(int id)
+        public async Task<bool> ExistAsync(int id)
         {
             var entity =await GetAsync(id);
             return entity != null;

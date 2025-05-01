@@ -12,11 +12,13 @@ using HotelListing.Api.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using HotelListing.Api.Models;
 using HotelListing.Api.Exceptions;
+using Asp.Versioning;
 
 namespace HotelListing.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/countries")]
     public class CountriesController : ControllerBase
     {
         private readonly HotelListingDbContext _context;
@@ -120,7 +122,7 @@ namespace HotelListing.Api.Controllers
 
         private async Task<bool> CountryExists(int id)
         {
-            return await _countriesRepository.Exist(id);
+            return await _countriesRepository.ExistAsync(id);
         }
     }
 }

@@ -16,6 +16,11 @@ namespace HotelListing.Api.Repository
             this.mapper = mapper;
         }
 
+        public async Task<IEnumerable<string>> GetCountryNames()
+        {
+            return await dbContext.Countries.Select(x => x.Name).ToListAsync();
+        }
+
         public async Task<Country?> GetCountryWithHotels(int id)
         {
             return await dbContext.Countries.Include(x => x.Hotels).FirstOrDefaultAsync(x => x.CountryId == id);
