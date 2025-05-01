@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('serviceConnectorResourceGroupName')]/providers/Microsoft.Web/sites/HotelListingApi20250429232902/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsHotelListingDbConnectio_AC720EAFD7",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/trev-apps-dbserver/databases/HotelListingApiDb",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:HotelListingDbConnectionString1",
+      "dynamicId": null
+    }
+  }
+}

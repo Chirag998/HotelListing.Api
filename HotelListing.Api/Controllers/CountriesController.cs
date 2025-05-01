@@ -9,6 +9,9 @@ using HotelListing.Api.Data;
 using HotelListing.Api.Models.Country;
 using AutoMapper;
 using HotelListing.Api.Contracts;
+using Microsoft.AspNetCore.Authorization;
+using HotelListing.Api.Models;
+using HotelListing.Api.Exceptions;
 
 namespace HotelListing.Api.Controllers
 {
@@ -19,22 +22,33 @@ namespace HotelListing.Api.Controllers
         private readonly HotelListingDbContext _context;
         private readonly IMapper _mapper;
         private readonly ICountriesRepository _countriesRepository;
-        public CountriesController(HotelListingDbContext context,IMapper mapper,ICountriesRepository countriesRepository)
+        private readonly ILogger<CountriesController> logger;
+
+        public CountriesController(HotelListingDbContext context,IMapper mapper,ICountriesRepository countriesRepository,
+            ILogger<CountriesController> logger)
         {
             _context = context;
             _mapper = mapper;
             _countriesRepository = countriesRepository;
+            this.logger = logger;
         }
 
         // GET: api/Countries
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetCountries()
         {
+            logger.LogInformation("Getting all countries");
             var countries = await _countriesRepository.GetAllAsync();
             var records = _mapper.Map<IEnumerable<GetCountryDto>>(countries);
             return Ok(records);
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetPagedCountries([FromQuery] QueryParameters queryParameters)
+        {
+            var pagedCountriesResult = await _countriesRepository.GetAllAsync<GetCountryDto>(queryParameters);
+            return Ok(pagedCountriesResult);
+        }
         // GET: api/Countries/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CountryDto>> GetCountry(int id)
@@ -43,7 +57,7 @@ namespace HotelListing.Api.Controllers
 
             if (country == null)
             {
-                return NotFound();
+                throw new NotFoundException(nameof(GetCountry),id);
             }
             var countryDto = _mapper.Map<CountryDto>(country);
 
@@ -86,6 +100,7 @@ namespace HotelListing.Api.Controllers
 
         // POST: api/Countries
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost]
         public async Task<ActionResult<Country>> PostCountry(CreateCountryDto createCountryDto)
         {
@@ -96,6 +111,7 @@ namespace HotelListing.Api.Controllers
 
         // DELETE: api/Countries/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteCountry(int id)
         {
             await _countriesRepository.DeleteAsync(id);
