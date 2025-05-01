@@ -35,6 +35,7 @@ namespace HotelListing.Api.Controllers
             this.logger = logger;
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<string>>> GetCountries()
         {

@@ -10,7 +10,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
 
@@ -48,18 +50,46 @@ builder.Services.AddApiVersioning(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 
-builder.Services.AddSwaggerGen(opions => {
-    opions.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
+builder.Services.AddSwaggerGen(options => {
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
     {
         Title="Hotel Listing API",
         Version="1.0"
     });
 
-    opions.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo()
+    options.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo()
     {
         Title = "Hotel Listing API",
         Version = "2.0"
     });
+
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
+    {
+        Description=@"JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.
+                     Example:Bearer 1234ghtgf",
+        Name="Authorization",
+        In=ParameterLocation.Header,
+        Type=SecuritySchemeType.ApiKey,
+        Scheme="Bearer"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+{
+    {
+        new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            },
+            Scheme = "Bearer",
+            Name = "Authorization",
+            In = ParameterLocation.Header
+        },
+        new List<string>()
+    }
+});
 });
 
 
